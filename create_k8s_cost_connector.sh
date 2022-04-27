@@ -3,6 +3,10 @@ account_id="your_account_id"
 token="your_harness_token"
 description="API provisioned k8s connectors"
 
+#pending-items: 
+#1: how to dynamically get a list of all MasterURLs from AKS
+#2: how to dynamically get service account tokens for each particular cluster
+
 #define list of masterUrls and names below:
 declare -a masterUrlArray=("https://34.122.182.13" "masterurl2" "masterurl3")
 declare -a cluster_name_array=("dank8sconnector1" "dank8sconnector2" "dank8sconnector3")
