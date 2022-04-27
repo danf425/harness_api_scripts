@@ -1,4 +1,8 @@
 #!/bin/bash
+
+#pending item 1: how to get already created service_accounts
+#pending item 2: how to dynamically get master URLs per cluster
+
 account_id="your_account_id"
 token="your_token"
 description="API provisioned k8s connectors"
