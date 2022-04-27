@@ -1,21 +1,16 @@
 #!/bin/bash
-
-#pending item 1: how to get already created service_accounts
-#pending item 2: how to dynamically get master URLs per cluster
-
 account_id="your_account_id"
-token="your_token"
+token="your_harness_token"
 description="API provisioned k8s connectors"
 
+#define list of masterUrls and names below:
 declare -a masterUrlArray=("https://34.122.182.13" "masterurl2" "masterurl3")
 declare -a cluster_name_array=("dank8sconnector1" "dank8sconnector2" "dank8sconnector3")
 declare -a cluster_name_cost_array=("dank8sconnector1_costaccess" "dank8sconnector2_costaccess" "dank8sconnector3_costaccess")
 
 len=${#masterUrlArray[@]}
-
-
 for (( i=0; i<$len; i++ )); do 
-#create kubernetes connectors based on MasterURL and ServiceAccount
+#create generic_kubernetes_connectors based on MasterURL and ServiceAccount
 curl -i -X POST \
   'https://app.harness.io/gateway/ng/api/connectors?accountIdentifier='"$account_id"'' \
   -H 'Content-Type: application/json' \
@@ -46,7 +41,8 @@ curl -i -X POST \
             }
     }
 }  }'
-#create kubernetes cost connector
+
+#create kubernetes_cost_access connectors referencing the generic_k8s_connector
 curl -i -X POST \
   'https://app.harness.io/gateway/ng/api/connectors?accountIdentifier='"$account_id"'' \
   -H 'Content-Type: application/json' \
