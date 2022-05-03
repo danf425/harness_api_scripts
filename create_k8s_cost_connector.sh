@@ -1,20 +1,28 @@
 #!/bin/bash
+
+# OVERVIEW: The script below will create a k8s connector + cost access connector
+
+# PREREQUISITES:
+# - A delegate that can communicate with each masterURL needs to exist
+# - This script runs through a list of pre-identified MasterURLs, cluster_names, etc.
+# - A pre-created secret is used that references a service account token. We are referencing this service account to authorize the k8s connection within "account.YOURSECRETIDENTIFIER"
+#        - Secret creation (Service account token) can also be achieved via our APIs: https://harness.io/docs/api/tag/Secrets#operation/postSecret
+
 account_id="your_account_id"
+#Token-creation docs: https://ngdocs.harness.io/article/tdoad7xrh9-add-and-manage-api-keys#create_personal_access_token 
 token="your_harness_token"
 description="API provisioned k8s connectors"
 
-#pending-items: 
-#1: how to dynamically get a list of all MasterURLs from AKS
-#2: how to dynamically get service account tokens for each particular cluster
-
 #define list of masterUrls and names below:
-declare -a masterUrlArray=("https://34.122.182.13" "masterurl2" "masterurl3")
+declare -a master_url_array=("https://34.122.182.13" "masterurl2" "masterurl3")
 declare -a cluster_name_array=("dank8sconnector1" "dank8sconnector2" "dank8sconnector3")
 declare -a cluster_name_cost_array=("dank8sconnector1_costaccess" "dank8sconnector2_costaccess" "dank8sconnector3_costaccess")
 
-len=${#masterUrlArray[@]}
+len=${#master_url_array[@]}
+
+#Loop through the array and setup a connector per masterURL 
 for (( i=0; i<$len; i++ )); do 
-#create generic_kubernetes_connectors based on MasterURL and ServiceAccount
+#create generic_kubernetes_connectors based on MasterURL and ServiceAccount.
 curl -i -X POST \
   'https://app.harness.io/gateway/ng/api/connectors?accountIdentifier='"$account_id"'' \
   -H 'Content-Type: application/json' \
@@ -33,11 +41,11 @@ curl -i -X POST \
             "credential": {
               "type": "ManualConfig",
               "spec": {
-                "masterUrl": "'"${masterUrlArray[$i]}"'",
+                "masterUrl": "'"${master_url_array[$i]}"'",
                 "auth": {
                   "type": "ServiceAccount",
                   "spec": {
-                    "serviceAccountTokenRef": "account.danfcluster2satoken",
+                    "serviceAccountTokenRef": "account.YOURSECRETIDENTIFIER",
                     "caCertRef": null
                   }
                 }
@@ -70,4 +78,8 @@ curl -i -X POST \
     }
 }  }'; done
 
+
+#Other items to tackle in the future: 
+#1: Dynamically fetching list of MasterURLs from AKS, EKS, etc.
+#2: Dynamically create/get SA tokens for each particular cluster
 
