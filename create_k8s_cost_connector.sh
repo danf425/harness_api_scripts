@@ -11,6 +11,7 @@
 account_id="your_account_id"
 #Token-creation docs: https://ngdocs.harness.io/article/tdoad7xrh9-add-and-manage-api-keys#create_personal_access_token 
 token="your_harness_token"
+#Referencing a precreated Harness secret (SA Token)
 SAtoken_id="account.YOURSECRETIDENTIFIER"
 description="API provisioned k8s connectors"
 
